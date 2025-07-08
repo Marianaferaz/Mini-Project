@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cheers for Wawa Special Day!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Luckiest Guy', cursive;
+      background-color: #f5f5f5;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    .envelope-cover {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: #fce4ec;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .envelope {
+      position: relative;
+      width: 300px;
+      height: 180px;
+      background: #e6a756;
+      border: 2px solid #a06b34;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .envelope::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 150px solid transparent;
+      border-right: 150px solid transparent;
+      border-top: 90px solid #d8973c;
+      z-index: 1;
+    }
+
+    .flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 150px solid transparent;
+      border-right: 150px solid transparent;
+      border-bottom: 90px solid #b66c2e;
+      transform-origin: top center;
+      z-index: 2;
+      transition: transform 1s ease-in-out;
+    }
+
+    .envelope.open .flap {
+      transform: rotateX(-180deg);
+    }
+
+    .click-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 16px;
+      color: white;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 4px 12px;
+      border-radius: 6px;
+      animation: pulse 1s infinite;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    @keyframes pulse {
+      0% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.1); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .card {
+      display: none;
+      max-width: 800px;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 40px auto;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+
+    .birthday {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .text {
+      margin: 20px 0;
+    }
+
+    .muted {
+      color: gray;
+    }
+
+    canvas#confetti {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #backBtn {
+      background-color: #e6a756;
+      border: none;
+      padding: 8px 16px;
+      font-family: 'Luckiest Guy', cursive;
+      font-size: 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Amplop -->
+<div class="envelope-cover" id="envelopeCover">
+  <div class="envelope" id="envelope" onclick="openEnvelope()">
+    <div class="flap" id="flap"></div>
+    <div class="click-text">Click Here</div>
+  </div>
+</div>
+
+<!-- Kartu Ucapan -->
+<div class="card" id="birthdayCard">
+  <img src="https://img.freepik.com/premium-vector/birthday-card-with-balloons-birthday-cake-with-box-birthday-candles_1253202-149.jpg" alt="birthday" class="birthday">
+  <div class="text">
+    <h1>Cheers for Wawa Special Day!</h1>
+    <h2>May all your birthday wishes come true</h2>
+    <p>
+      Happy Birthday Wawaaa. Makasih udah ada didunia ini, dan jadi temanku selama ini.<br><br>
+      Semoga diulang tahunmu yang ke 21 ini kau bisa semakin dewasa, dilimpahkan rezeki, kuliah & kerjaanmu lancar, sehat, bahagia, waras & selalu kuat, semua kinginanmu bisa terkabul, ku doain yang terbaik buatmu.<br><br>
+      Makasih karna masih support dan kontakan samaku sampai sekarang wa, semoga pertemanan kita bisa terus gini kedepannya.<br><br>
+      Maaf kalo aku masih sering ngerepotin dan lama bales chatmu ya wa, walaupun kita jauh kalo kau butuh temen cerita chat aja pasti ku balas, aku tau kita udah sama" sibuk tapi sebisa mungkin pasti bakal ku balas walaupun gak fast respon. Hmm apalagi ya bingung, pokoknya semoga selalu ada hal baik buatmu sekali lagi selamat ulang tahun waaaa🎉🎂
+    </p>
+    <p class="muted">- Maria -</p>
+  </div>
+
+  <!-- Tombol Back -->
+  <div style="text-align: center;">
+    <button id="backBtn">Back</button>
+  </div>
+</div>
+
+<!-- Confetti -->
+<canvas id="confetti"></canvas>
+
+<script>
+  let confettiInterval;
+
+  function openEnvelope() {
+    const envelope = document.getElementById("envelope");
+    envelope.classList.add("open");
+
+    setTimeout(() => {
+      document.getElementById("envelopeCover").style.display = "none";
+      document.getElementById("birthdayCard").style.display = "block";
+      startConfetti();
+    }, 1000);
+  }
+
+  document.getElementById('backBtn').addEventListener('click', function() {
+    document.getElementById("birthdayCard").style.display = "none";
+    document.getElementById("envelopeCover").style.display = "flex";
+
+    // Reset flap ke tertutup
+    document.getElementById("envelope").classList.remove("open");
+
+    // Hentikan dan reset confetti
+    clearInterval(confettiInterval);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  });
+
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const confetti = [];
+  for (let i = 0; i < 150; i++) {
+    confetti.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      r: Math.random() * 6 + 4,
+      d: Math.random() * 6 + 4,
+      color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+      tilt: Math.random() * 10 - 10,
+      tiltAngle: 0,
+      tiltAngleIncrement: Math.random() * 0.07 + 0.05
+    });
+  }
+
+  function drawConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confetti.forEach(p => {
+      ctx.beginPath();
+      ctx.lineWidth = p.r;
+      ctx.strokeStyle = p.color;
+      ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+      ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+      ctx.stroke();
+    });
+    updateConfetti();
+  }
+
+  function updateConfetti() {
+    confetti.forEach(p => {
+      p.tiltAngle += p.tiltAngleIncrement;
+      p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+      p.tilt = Math.sin(p.tiltAngle) * 15;
+
+      if (p.y > canvas.height) {
+        p.y = -10;
+        p.x = Math.random() * canvas.width;
+      }
+    });
+  }
+
+  function startConfetti() {
+    confettiInterval = setInterval(drawConfetti, 20);
+  }
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+</script>
+
+</body>
+</html>
